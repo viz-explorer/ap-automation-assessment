@@ -16,18 +16,23 @@ These materials form the input dataset for a technical recruitment case study. C
 | `historic_invoices.csv` | 120 historical invoice records from Jan 2024 – Jun 2025, used for duplicate detection and pattern validation |
 | `data_dictionary.md` | Field-level descriptions for all columns in both CSV files |
 
-**Invoice PDFs table:**
+## Invoice PDFs (`invoices/`)
 
-**| File	| Description |**
-| invoices | A batch of 17 vendor invoices in PDF format representing a typical working day. Invoices vary in layout, quality, and vendor type. Your solution must process all of them. |
+| File | Description |
+|---|---|
+| `invoices/` | A batch of 17 vendor invoices in PDF format representing a typical working day. Invoices vary in layout, quality, and vendor type. Your solution must process all of them. |
 
-**Key Relationships and Test Cases:**
+---
 
-**Business rules your solution must handle:**
+## Business Rules
 
-**Vendor validation:** Every invoice must be matched against vendor_master.csv. Invoices from vendors not present in the master, or from vendors with status = INACTIVE, should be flagged and held.
-**Currency validation:** Each vendor has an approved_currency in the master. Invoices submitted in a different currency should be flagged for review.
-**Spend threshold:** Each vendor has a spend_threshold_eur. Invoices exceeding this value should be flagged before reaching an approver.
-**Dual approval:** Vendors with requires_dual_approval = TRUE must be routed for two approvals regardless of amount.
-**Duplicate detection:** Cross-reference each incoming invoice against historic_invoices.csv. Flag invoices that appear to be duplicates or near-duplicates of previously processed ones.
-**Mandatory fields:** Invoices missing required fields (such as PO number) should be held pending completion.
+Your solution must handle the following scenarios. These reflect the rules the AP team applies manually today.
+
+| Rule | Description |
+|---|---|
+| **Vendor validation** | Every invoice must be matched against `vendor_master.csv`. Invoices from unknown vendors or vendors with `status = INACTIVE` should be flagged and held. |
+| **Currency validation** | Each vendor has an `approved_currency`. Invoices submitted in a different currency should be flagged for review. |
+| **Spend threshold** | Each vendor has a `spend_threshold_eur`. Invoices exceeding this value should be flagged before reaching an approver. |
+| **Dual approval** | Vendors with `requires_dual_approval = TRUE` must be routed for two approvals regardless of amount. |
+| **Duplicate detection** | Cross-reference each invoice against `historic_invoices.csv`. Flag invoices that appear to be duplicates or near-duplicates of previously processed ones. |
+| **Mandatory fields** | Invoices missing required fields (such as PO number) should be held pending completion. |
