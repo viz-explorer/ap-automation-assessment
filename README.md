@@ -16,31 +16,18 @@ These materials form the input dataset for a technical recruitment case study. C
 | `historic_invoices.csv` | 120 historical invoice records from Jan 2024 – Jun 2025, used for duplicate detection and pattern validation |
 | `data_dictionary.md` | Field-level descriptions for all columns in both CSV files |
 
-### Invoice PDFs (`invoices/`)
+**Invoice PDFs table:**
 
-#### Clean invoices (processable, no exceptions)
+**| File	| Description |**
+| invoices | A batch of 17 vendor invoices in PDF format representing a typical working day. Invoices vary in layout, quality, and vendor type. Your solution must process all of them. |
 
-| File | Vendor | Scenario |
-|---|---|---|
-| `INV-2025-03701_V001_EuroFuel.pdf` | V001 EuroFuel GmbH | Standard fuel invoice, June 2025 |
-| `INV-2025-03712_V004_FleetMech.pdf` | V004 FleetMech GmbH | Standard maintenance invoice |
-| `INV-2025-03719_V005_AutoServ.pdf` | V005 AutoServ S.R.L. | Standard maintenance invoice |
-| `INV-2025-03744_V008_CleanStation.pdf` | V008 CleanStation S.A. | Standard cleaning invoice |
-| `INV-2025-03760_V010_StationOps.pdf` | V010 StationOps GmbH | Standard station operations invoice |
-| `INV-2025-03771_V012_MediaBoost.pdf` | V012 MediaBoost GmbH | Standard marketing invoice |
-| `INV-2025-03779_V013_NordClean.pdf` | V013 NordClean ApS | Standard cleaning invoice |
-| `INV-2025-03791_V014_IberMaint.pdf` | V014 IberMaint S.L. | Standard maintenance invoice |
+**Key Relationships and Test Cases:**
 
-#### Exception invoices
+**Business rules your solution must handle:**
 
-| File | Vendor | Exception Type |
-|---|---|---|
-| `INV-2025-03788_V002_AlpinaDiesel.pdf` | V002 AlpinaDiesel AG | **High-value clean** — €42,121 fuel invoice, within threshold, legitimate |
-| `INV-2025-03847_V003_TotalRoute.pdf` | V003 TotalRoute S.A. | **Near-duplicate** — €8,450, same vendor/amount as INV-2024-00892 in history, slightly different date and number |
-| `INV-2025-03901_V007_SecureGuard.pdf` | V007 SecureGuard AG | **Dual approval required** — V007 requires two approvers regardless of amount (€18,500) |
-| `INV-2025-03731_V006_BritTech_GBP.pdf` | V006 BritTech Solutions Ltd | **Currency mismatch** — vendor approved for EUR, invoice submitted in GBP (£4,998) |
-| `INV-2025-03752_V009_SparkIT_NoPO.pdf` | V009 SparkIT BV | **Missing PO number** — PO reference field is blank |
-| `INV-2025-03880_V018_OldGuard_INACTIVE.pdf` | V018 OldGuard Security NV | **Inactive vendor** — V018 is INACTIVE in vendor master |
-| `INV-2025-03955_UNKNOWN_LogiTrans.pdf` | LogiTrans Express SRL | **Unknown vendor** — vendor not present in vendor master |
-| `INV-2025-SCAN-001_V015_QuickFix.pdf` | V015 QuickFix OÜ | **Scan simulation** — less structured layout simulating a scanned paper invoice |
-| `INV-2025-SCAN-002_V016_PolyClean.pdf` | V016 PolyClean Sp.z.o.o. | **Scan simulation** — less structured layout simulating a scanned paper invoice |
+**Vendor validation:** Every invoice must be matched against vendor_master.csv. Invoices from vendors not present in the master, or from vendors with status = INACTIVE, should be flagged and held.
+**Currency validation:** Each vendor has an approved_currency in the master. Invoices submitted in a different currency should be flagged for review.
+**Spend threshold:** Each vendor has a spend_threshold_eur. Invoices exceeding this value should be flagged before reaching an approver.
+**Dual approval:** Vendors with requires_dual_approval = TRUE must be routed for two approvals regardless of amount.
+**Duplicate detection:** Cross-reference each incoming invoice against historic_invoices.csv. Flag invoices that appear to be duplicates or near-duplicates of previously processed ones.
+**Mandatory fields:** Invoices missing required fields (such as PO number) should be held pending completion.
