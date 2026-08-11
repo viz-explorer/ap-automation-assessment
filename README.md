@@ -44,14 +44,3 @@ These materials form the input dataset for a technical recruitment case study. C
 | `INV-2025-03955_UNKNOWN_LogiTrans.pdf` | LogiTrans Express SRL | **Unknown vendor** — vendor not present in vendor master |
 | `INV-2025-SCAN-001_V015_QuickFix.pdf` | V015 QuickFix OÜ | **Scan simulation** — less structured layout simulating a scanned paper invoice |
 | `INV-2025-SCAN-002_V016_PolyClean.pdf` | V016 PolyClean Sp.z.o.o. | **Scan simulation** — less structured layout simulating a scanned paper invoice |
-
----
-
-## Key Relationships and Test Cases
-
-- **Duplicate detection:** `INV-2025-03847` (V003, €8,450, 2025-07-02) is a near-duplicate of `INV-2024-00892` in `historic_invoices.csv` (same vendor, same amount, different date/number).
-- **Threshold logic:** V007 has `requires_dual_approval = TRUE`; all V007 invoices should route for dual sign-off regardless of amount.
-- **Currency validation:** Each vendor has an `approved_currency` in the master; invoices in any other currency should be flagged.
-- **Vendor status check:** V018, V021, V024 are INACTIVE; invoices from these vendors should be rejected.
-- **Unknown vendor:** LogiTrans Express SRL has no matching `vendor_id` in the master.
-- **PO enforcement:** Missing PO numbers should trigger an exception or hold.
